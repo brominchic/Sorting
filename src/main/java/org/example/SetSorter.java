@@ -22,17 +22,24 @@ public class SetSorter {
         for (int i = 0; i < baseList.size(); i++) {
             valuesOfBaseList.put(baseList.get(i), i);
         }
-        ArrayList<ArrayList<ArrayList>> finalList = new ArrayList<ArrayList<ArrayList>>();
+        ArrayList<ArrayList<ArrayList>> list = new ArrayList<ArrayList<ArrayList>>();
         if (baseList.size() <= 3) {
-            return getFirstThreeArrays(baseList,valuesOfBaseList);
+            ArrayList<ArrayList<ArrayList>> firstThreeArrays= getFirstThreeArrays(baseList,valuesOfBaseList);
+            ArrayList<ArrayList> threeList = new ArrayList<>();
+            for (int i = 0; i <3 ; i++) {
+                for (int j = 0; j < firstThreeArrays.get(i).size(); j++) {
+                    threeList.add(firstThreeArrays.get(i).get(j));
+                }
+            }
+            return threeList;
         }
         ArrayList<ArrayList<ArrayList>> firstThree = getFirstThreeArrays(baseList,valuesOfBaseList);
         for (int i = 0; i < 3; i++) {
-            finalList.add(i, firstThree.get(i));
+            list.add(i, firstThree.get(i));
         }
         ArrayList<ArrayList<ArrayList>> combinations = getAllUniqueCombinations(baseList,valuesOfBaseList);
         for (int i = 3; i < baseList.size(); i++) {
-            finalList.add(i,new ArrayList<ArrayList>());
+            list.add(i,new ArrayList<ArrayList>());
             for (int j = 0; j < baseList.size() - i; j++) {
                 for (int k = 0; k < combinations.get(i-1).size(); k++) {
                     int intFirstChar = (int) valuesOfBaseList.get(baseList.get(j));
@@ -43,23 +50,29 @@ public class SetSorter {
                         ArrayList<ArrayList> newCombinations = getAllArrays(newCombination,valuesOfBaseList);
                         for (int l = 0; l < newCombinations.size(); l++) {
                             newCombinations.get(l).add(0,baseList.get(j));
-                            finalList.get(i).add(newCombinations.get(l));
+                            list.get(i).add(newCombinations.get(l));
                         }
                     }
                 }
+            }
+        }
+        ArrayList<ArrayList> finalList = new ArrayList<ArrayList>();
+        for (int i = 0; i <list.size(); i++) {
+            for (int j = 0; j <list.get(i).size(); j++) {
+                finalList.add(list.get(i).get(j));
             }
         }
         return finalList;
     }
 
     private ArrayList getFirstThreeArrays(ArrayList baseList,HashMap valuesOfBaseList) {
-        ArrayList<ArrayList<ArrayList>> lists = new ArrayList<ArrayList<ArrayList>>();
+        ArrayList<ArrayList<ArrayList>> firstThreeArrays = new ArrayList<ArrayList<ArrayList>>();
         for (int i = 0; i < baseList.size(); i++) {
-            lists.add(new ArrayList<ArrayList>());
+            firstThreeArrays.add(new ArrayList<ArrayList>());
         }
         for (int i = 0; i < baseList.size(); i++) {
-            lists.get(0).add(new ArrayList<ArrayList>());
-            lists.get(0).get(i).add(baseList.get(i));
+            firstThreeArrays.get(0).add(new ArrayList<ArrayList>());
+            firstThreeArrays.get(0).get(i).add(baseList.get(i));
         }
         int size = 0;
         if (valuesOfBaseList.size() >= 3) {
@@ -69,22 +82,22 @@ public class SetSorter {
         }
         for (int n = 0; n < size - 1; n++) {
             int num = 0;
-            for (int i = 0; i < lists.size(); i++) {
-                for (int j = 0; j < lists.get(n).size(); j++) {
-                    int intFirstChar = (int) valuesOfBaseList.get(lists.get(0).get(i).get(0));
-                    int intLastChar = (int) valuesOfBaseList.get(lists.get(n).get(j).get(0));
+            for (int i = 0; i < firstThreeArrays.size(); i++) {
+                for (int j = 0; j < firstThreeArrays.get(n).size(); j++) {
+                    int intFirstChar = (int) valuesOfBaseList.get(firstThreeArrays.get(0).get(i).get(0));
+                    int intLastChar = (int) valuesOfBaseList.get(firstThreeArrays.get(n).get(j).get(0));
                     if (intFirstChar < intLastChar) {
-                        lists.get(n + 1).add(new ArrayList<>());
-                        lists.get(n + 1).get(num).add(lists.get(0).get(i).get(0));
-                        for (int k = 0; k < lists.get(n).get(j).size(); k++) {
-                            lists.get(n + 1).get(num).add(lists.get(n).get(j).get(k));
+                        firstThreeArrays.get(n + 1).add(new ArrayList<>());
+                        firstThreeArrays.get(n + 1).get(num).add(firstThreeArrays.get(0).get(i).get(0));
+                        for (int k = 0; k < firstThreeArrays.get(n).get(j).size(); k++) {
+                            firstThreeArrays.get(n + 1).get(num).add(firstThreeArrays.get(n).get(j).get(k));
                         }
                         num++;
                     }
                 }
             }
         }
-        return lists;
+        return firstThreeArrays;
     }
 
     public ArrayList getAllUniqueCombinations(ArrayList baseList, HashMap valuesOfBaseList) {
@@ -149,6 +162,7 @@ public class SetSorter {
 
     private void writeToArray(ArrayList baseList, int numOfPositionInArray, int SizeOfSet, int LastSizeOfSet, int numOfString, ArrayList<ArrayList> allArrays) throws CloneNotSupportedException {
         writeToPosition(baseList, numOfPositionInArray, SizeOfSet, numOfString, allArrays);
+        System.out.println(allArrays);
         int size = baseList.size();
         for (int i = 0; i < baseList.size(); i++) {
             ArrayList newList = (ArrayList) baseList.clone();
