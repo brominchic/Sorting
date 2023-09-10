@@ -2,6 +2,7 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class SetSorter {
 
@@ -17,39 +18,48 @@ public class SetSorter {
 
     }
 
-    public ArrayList getArrays(ArrayList baseList) throws CloneNotSupportedException {
+    // где тесты?
+    // где комменты?
+    // почему приватный метод выше чем публичный
+    // исправил тебе сигнатуру метода чтобы ты понимал как должно быть
+    // работу надо вести в отдельной ветке и открывать мр чтобы можно было комментить
+    // папку .idea надо заносить в гитигнор, оно у каждого свое генерится
+    public <T> List<List<T>> getArrays(List<T> baseList) throws CloneNotSupportedException {
         HashMap valuesOfBaseList = new HashMap();
         for (int i = 0; i < baseList.size(); i++) {
             valuesOfBaseList.put(baseList.get(i), i);
         }
+        // старайся работать в первую очередь с абстракциями, интерфейсами, т.п List а не с реализациями(ArrayList)
         ArrayList<ArrayList<ArrayList>> list = new ArrayList<ArrayList<ArrayList>>();
+        // мне кажется этот код излишним, твоя рекурсия в целом сможет эти кейсы покрывать
         if (baseList.size() <= 3) {
-            ArrayList<ArrayList<ArrayList>> firstThreeArrays= getFirstThreeArrays(baseList,valuesOfBaseList);
+            ArrayList<ArrayList<ArrayList>> firstThreeArrays = getFirstThreeArrays(baseList, valuesOfBaseList);
             ArrayList<ArrayList> threeList = new ArrayList<>();
-            for (int i = 0; i <3 ; i++) {
+            for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < firstThreeArrays.get(i).size(); j++) {
                     threeList.add(firstThreeArrays.get(i).get(j));
                 }
             }
             return threeList;
         }
-        ArrayList<ArrayList<ArrayList>> firstThree = getFirstThreeArrays(baseList,valuesOfBaseList);
+        ArrayList<ArrayList<ArrayList>> firstThree = getFirstThreeArrays(baseList, valuesOfBaseList);
         for (int i = 0; i < 3; i++) {
             list.add(i, firstThree.get(i));
         }
-        ArrayList<ArrayList<ArrayList>> combinations = getAllUniqueCombinations(baseList,valuesOfBaseList);
+        ArrayList<ArrayList<ArrayList>> combinations = getAllUniqueCombinations(baseList, valuesOfBaseList);
         for (int i = 3; i < baseList.size(); i++) {
-            list.add(i,new ArrayList<ArrayList>());
+            list.add(i, new ArrayList<ArrayList>());
             for (int j = 0; j < baseList.size() - i; j++) {
-                for (int k = 0; k < combinations.get(i-1).size(); k++) {
+                for (int k = 0; k < combinations.get(i - 1).size(); k++) {
+                    // ты тут так работаешь с элементами как будто они всегда int. задание поставлено что элементы могут быть любыми объектами
                     int intFirstChar = (int) valuesOfBaseList.get(baseList.get(j));
-                    int intLastChar = (int) valuesOfBaseList.get(combinations.get(i-1).get(k).get(0));
+                    int intLastChar = (int) valuesOfBaseList.get(combinations.get(i - 1).get(k).get(0));
                     if (intFirstChar < intLastChar) {
                         ArrayList newCombination = new ArrayList<>();
-                        newCombination=combinations.get(i-1).get(k);
-                        ArrayList<ArrayList> newCombinations = getAllArrays(newCombination,valuesOfBaseList);
+                        newCombination = combinations.get(i - 1).get(k);
+                        ArrayList<ArrayList> newCombinations = getAllArrays(newCombination, valuesOfBaseList);
                         for (int l = 0; l < newCombinations.size(); l++) {
-                            newCombinations.get(l).add(0,baseList.get(j));
+                            newCombinations.get(l).add(0, baseList.get(j));
                             list.get(i).add(newCombinations.get(l));
                         }
                     }
@@ -57,15 +67,16 @@ public class SetSorter {
             }
         }
         ArrayList<ArrayList> finalList = new ArrayList<ArrayList>();
-        for (int i = 0; i <list.size(); i++) {
-            for (int j = 0; j <list.get(i).size(); j++) {
+        for (int i = 0; i < list.size(); i++) {
+            for (int j = 0; j < list.get(i).size(); j++) {
                 finalList.add(list.get(i).get(j));
             }
         }
         return finalList;
     }
 
-    private ArrayList getFirstThreeArrays(ArrayList baseList,HashMap valuesOfBaseList) {
+    // формат поломался, почаще нажимай ctrl-alt-l. перед коммитом можно галочку поставить reformat code
+    private ArrayList getFirstThreeArrays(ArrayList baseList, HashMap valuesOfBaseList) {
         ArrayList<ArrayList<ArrayList>> firstThreeArrays = new ArrayList<ArrayList<ArrayList>>();
         for (int i = 0; i < baseList.size(); i++) {
             firstThreeArrays.add(new ArrayList<ArrayList>());
@@ -142,12 +153,12 @@ public class SetSorter {
             writeToArray(baseList, 0, 0, 0, i, allArrays);
         }
         for (int i = 0; i < baseList.size(); i++) {
-            sort(i, allArrays,valuesOfBaseList);
+            sort(i, allArrays, valuesOfBaseList);
         }
         return allArrays.get(0);
     }
 
-    private void sort(int numOfString, ArrayList<ArrayList> allArrays,HashMap valuesOfBaseList) {
+    private void sort(int numOfString, ArrayList<ArrayList> allArrays, HashMap valuesOfBaseList) {
         ArrayList<ArrayList> arrayList = allArrays.get(allArrays.size() - 1 - numOfString);
         int size = arrayList.size();
         for (int i = size - 1; i >= 0; i--) {
