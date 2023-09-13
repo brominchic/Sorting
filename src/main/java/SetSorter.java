@@ -1,7 +1,6 @@
-package org.example;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SetSorter {
@@ -9,54 +8,25 @@ public class SetSorter {
     public SetSorter() {
     }
 
-    private static int getFactorial(int firstInt) {
-        int result = 1;
-        for (int i = 1; i <= firstInt; i++) {
-            result = result * i;
-        }
-        return result;
-
-    }
-
-    // где тесты?
-    // где комменты?
-    // почему приватный метод выше чем публичный
-    // исправил тебе сигнатуру метода чтобы ты понимал как должно быть
-    // работу надо вести в отдельной ветке и открывать мр чтобы можно было комментить
-    // папку .idea надо заносить в гитигнор, оно у каждого свое генерится
     public <T> List<List<T>> getArrays(List<T> baseList) throws CloneNotSupportedException {
-        HashMap valuesOfBaseList = new HashMap();
+        HashMap valuesOfBaseList = new HashMap(); // создаем мапу хрананящую числовое значение для каждого элемента из baseList
         for (int i = 0; i < baseList.size(); i++) {
             valuesOfBaseList.put(baseList.get(i), i);
         }
-        // старайся работать в первую очередь с абстракциями, интерфейсами, т.п List а не с реализациями(ArrayList)
-        ArrayList<ArrayList<ArrayList>> list = new ArrayList<ArrayList<ArrayList>>();
-        // мне кажется этот код излишним, твоя рекурсия в целом сможет эти кейсы покрывать
-        if (baseList.size() <= 3) {
-            ArrayList<ArrayList<ArrayList>> firstThreeArrays = getFirstThreeArrays(baseList, valuesOfBaseList);
-            ArrayList<ArrayList> threeList = new ArrayList<>();
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < firstThreeArrays.get(i).size(); j++) {
-                    threeList.add(firstThreeArrays.get(i).get(j));
-                }
-            }
-            return threeList;
-        }
-        ArrayList<ArrayList<ArrayList>> firstThree = getFirstThreeArrays(baseList, valuesOfBaseList);
+        ArrayList<ArrayList<ArrayList>> list = new ArrayList();//создаем массив массивов массивов чтобы хранить там все уникальные значения, абстракцию тут запихнуть не получилось
+        List<ArrayList<ArrayList>> firstThree = getFirstThreeArrays(baseList, valuesOfBaseList);// c помощью метода получаем комбинации с одним, двумя и тремя обьектами
         for (int i = 0; i < 3; i++) {
             list.add(i, firstThree.get(i));
         }
         ArrayList<ArrayList<ArrayList>> combinations = getAllUniqueCombinations(baseList, valuesOfBaseList);
         for (int i = 3; i < baseList.size(); i++) {
-            list.add(i, new ArrayList<ArrayList>());
+            list.add(i, new ArrayList<ArrayList>());// добавляем массив для хранения дргуих массивов из i+1 элементов
             for (int j = 0; j < baseList.size() - i; j++) {
                 for (int k = 0; k < combinations.get(i - 1).size(); k++) {
-                    // ты тут так работаешь с элементами как будто они всегда int. задание поставлено что элементы могут быть любыми объектами
-                    int intFirstChar = (int) valuesOfBaseList.get(baseList.get(j));
-                    int intLastChar = (int) valuesOfBaseList.get(combinations.get(i - 1).get(k).get(0));
-                    if (intFirstChar < intLastChar) {
-                        ArrayList newCombination = new ArrayList<>();
-                        newCombination = combinations.get(i - 1).get(k);
+                    int intFirstChar = (int) valuesOfBaseList.get(baseList.get(j));// получаем числовое значение для элемента под номером j из изначального массива
+                    int intLastChar = (int) valuesOfBaseList.get(combinations.get(i - 1).get(k).get(0));//получаем числовое значение для первого элемента из массива комбинаций длинной i
+                    if (intFirstChar < intLastChar) {// сравниваем, если числовое значени элемента из изначального массива меньше первого элемента из комбинации, то с помощью метода получаем все массивы из n чисел, что при добавления справа еще одного все массивы окажутся уникальными, и добавляем к ним элемент изначального массива под номером j
+                        ArrayList newCombination = combinations.get(i - 1).get(k);
                         ArrayList<ArrayList> newCombinations = getAllArrays(newCombination, valuesOfBaseList);
                         for (int l = 0; l < newCombinations.size(); l++) {
                             newCombinations.get(l).add(0, baseList.get(j));
@@ -66,7 +36,7 @@ public class SetSorter {
                 }
             }
         }
-        ArrayList<ArrayList> finalList = new ArrayList<ArrayList>();
+        LinkedList<List<T>> finalList = new LinkedList<List<T>>();//добавляем все в один массив
         for (int i = 0; i < list.size(); i++) {
             for (int j = 0; j < list.get(i).size(); j++) {
                 finalList.add(list.get(i).get(j));
@@ -75,14 +45,15 @@ public class SetSorter {
         return finalList;
     }
 
-    // формат поломался, почаще нажимай ctrl-alt-l. перед коммитом можно галочку поставить reformat code
-    private ArrayList getFirstThreeArrays(ArrayList baseList, HashMap valuesOfBaseList) {
+    private List getFirstThreeArrays(List baseList, HashMap valuesOfBaseList) {// Этот метод по сути getAllUniqueCombinations, но для длинны от 1 до 3 обьектов
         ArrayList<ArrayList<ArrayList>> firstThreeArrays = new ArrayList<ArrayList<ArrayList>>();
         for (int i = 0; i < baseList.size(); i++) {
             firstThreeArrays.add(new ArrayList<ArrayList>());
         }
         for (int i = 0; i < baseList.size(); i++) {
-            firstThreeArrays.get(0).add(new ArrayList<ArrayList>());
+            firstThreeArrays.get(0).add(new ArrayList<
+
+                    ArrayList>());
             firstThreeArrays.get(0).get(i).add(baseList.get(i));
         }
         int size = 0;
@@ -111,7 +82,8 @@ public class SetSorter {
         return firstThreeArrays;
     }
 
-    public ArrayList getAllUniqueCombinations(ArrayList baseList, HashMap valuesOfBaseList) {
+    private ArrayList getAllUniqueCombinations(List baseList, HashMap valuesOfBaseList) {
+        //возвращает все варианты комбинаций по n элементов, где n от 1 до длинны начального массива
         ArrayList<ArrayList<ArrayList>> allUniqueCombinations = new ArrayList<ArrayList<ArrayList>>();
         for (int i = 0; i < baseList.size(); i++) {
             allUniqueCombinations.add(new ArrayList<ArrayList>());
@@ -137,10 +109,12 @@ public class SetSorter {
                 }
             }
         }
+        System.out.println(allUniqueCombinations);
         return allUniqueCombinations;
     }
 
     private ArrayList<ArrayList> getAllArrays(ArrayList baseList, HashMap valuesOfBaseList) throws CloneNotSupportedException {
+        // метод который вызывает рекурсивный метод для поиска и метод сортировки, возвращает такие массивы из n чисел, что при добавления справа еще одного все массивы окажутся уникальными
         ArrayList<ArrayList> allArrays = new ArrayList<ArrayList>();
         int size = getFactorial(baseList.size());
         for (int i = 0; i < baseList.size(); i++) {
@@ -159,6 +133,7 @@ public class SetSorter {
     }
 
     private void sort(int numOfString, ArrayList<ArrayList> allArrays, HashMap valuesOfBaseList) {
+        // метод сортировки отвечающий за то, чтобы не было массивов которые справа налево повторяют другие массивы слева направо
         ArrayList<ArrayList> arrayList = allArrays.get(allArrays.size() - 1 - numOfString);
         int size = arrayList.size();
         for (int i = size - 1; i >= 0; i--) {
@@ -172,6 +147,7 @@ public class SetSorter {
     }
 
     private void writeToArray(ArrayList baseList, int numOfPositionInArray, int SizeOfSet, int LastSizeOfSet, int numOfString, ArrayList<ArrayList> allArrays) throws CloneNotSupportedException {
+        // рекурсивный метод который в паре с writeToPosition выдает все комбинации массивов из каких то обьектов
         writeToPosition(baseList, numOfPositionInArray, SizeOfSet, numOfString, allArrays);
         System.out.println(allArrays);
         int size = baseList.size();
@@ -196,6 +172,15 @@ public class SetSorter {
                 }
             }
         }
+    }
+
+    private static int getFactorial(int firstInt) {
+        int result = 1;
+        for (int i = 1; i <= firstInt; i++) {
+            result = result * i;
+        }
+        return result;
+
     }
 }
 

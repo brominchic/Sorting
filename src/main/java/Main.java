@@ -1,10 +1,8 @@
-package org.example;
-
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Main {
     public static void main(String args[]) throws CloneNotSupportedException {
-        ArrayList list = new ArrayList<>();
+        LinkedList list = new LinkedList<>();
         list.add(1);
         list.add(2);
         list.add(3);
