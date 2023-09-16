@@ -9,6 +9,5 @@ public class Main {
         list.add(4);
         SetSorter setSorter= new SetSorter();
         System.out.println(setSorter.getArrays(list));
-
     }
 }
