@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SetSorter {
+public class SetSorter implements Sorter {
 
     public SetSorter() {
     }
@@ -17,6 +17,7 @@ public class SetSorter {
 
     }
 
+    @Override
     public <T> List<List<T>> getArrays(List<T> baseList) {
         HashMap<T, Integer> valuesOfBaseList = new HashMap<>(); // создаем мапу хрананящую числовое значение для каждого элемента из baseList
         for (int i = 0; i < baseList.size(); i++) {
